@@ -13,7 +13,7 @@ class TodoListCreateApiView(ListCreateAPIView):
         id = self.kwargs.get('id', None)
         if id is not None and id != 0:
             try:
-                result = self.get_queryset().filter(id=id, is_running=True).first()
+                result = self.get_queryset().filter(id=id).first()
             except Todo.DoesNotExist:
                 return CustomResponse(None, status.HTTP_404_NOT_FOUND,"Todos doesn't exist.")
             serializer = self.get_serializer(result)
@@ -21,7 +21,7 @@ class TodoListCreateApiView(ListCreateAPIView):
                 return CustomResponse(serializer.data, status.HTTP_404_NOT_FOUND)
             return CustomResponse(serializer.data, status.HTTP_200_OK)
         else:
-            serializer = self.get_serializer(self.get_queryset().filter(is_running=True), many=True)
+            serializer = self.get_serializer(self.get_queryset(), many=True)
             return CustomResponse(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
